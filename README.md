@@ -17,14 +17,21 @@ Pass the names of all participants as arguments.
 
 ## Usage
 
-1. Enter the product price in the top box.
+1. Run:
+
+   ```powershell
+   python splitter.py Dan Alex Michael
+   ```
+
+2. Enter the product price in the top box.
 
    <img src="README.assets/image-20210909200554046.png" alt="image-20210909200554046" style="zoom:80%;" />
-2. Select the participants.
+
+3. Select the participants.
 
    <img src="README.assets/image-20210909200534948.png" alt="image-20210909200534948" style="zoom:80%;" />
 
-3. Click `Add to total`
+4. Click `Add to total`.
 
    <img src="README.assets/image-20210909200654212.png" alt="image-20210909200654212" style="zoom:80%;" />
    The share of each person should be reflected on the right.
