@@ -34,6 +34,7 @@ Pass the names of all participants as arguments.
 4. Click `Add to total`.
 
    <img src="README.assets/image-20210909200654212.png" alt="image-20210909200654212" style="zoom:80%;" />
+   
    The share of each person should be reflected on the right.
    The total cost is shown at the bottom.
 
