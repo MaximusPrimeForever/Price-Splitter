@@ -1,5 +1,8 @@
 """Splitter GUI."""
+import ast
 import sys
+import operator as op
+
 
 import argparse
 from typing import Dict, List
@@ -42,6 +45,13 @@ class Participant:
 
 class SplitterUI(QWidget):
     """Splitter GUI class."""
+
+    # supported operators
+    operators = {
+        ast.Add: op.add, ast.Sub: op.sub, ast.Mult: op.mul,
+        ast.Div: op.truediv, ast.Pow: op.pow, ast.BitXor: op.xor,
+        ast.USub: op.neg
+    }
 
     def __init__(self, participants: List[str], use_light_theme: bool):
         """Initialize UI."""
@@ -210,6 +220,37 @@ class SplitterUI(QWidget):
 
         self.product_price_box.setFocus()
 
+    @staticmethod
+    def _eval_expr(expr):
+        """
+        >>> eval_expr('2^6')
+        4
+        >>> eval_expr('2**6')
+        64
+        >>> eval_expr('1 + 2*3**(4^5) / (6 + -7)')
+        -5.0
+        """
+        return SplitterUI._eval(ast.parse(expr, mode='eval').body)
+
+    @staticmethod
+    def _eval(node):
+        if isinstance(node, ast.Num):  # <number>
+            return node.n
+
+        elif isinstance(node, ast.BinOp):  # <left> <operator> <right>
+            return SplitterUI.operators[type(node.op)](
+                SplitterUI._eval(node.left),
+                SplitterUI._eval(node.right)
+            )
+
+        elif isinstance(node, ast.UnaryOp):  # <operator> <operand> e.g., -1
+            return SplitterUI.operators[type(node.op)](
+                SplitterUI._eval(node.operand)
+            )
+
+        else:
+            raise TypeError(node)
+
     def _add_entry(self):
         """Compute the product price per person, and update text boxes."""
         if not self.product_price_box.text():
@@ -218,7 +259,7 @@ class SplitterUI(QWidget):
         # get the product price from GUI
         product_price = 0.0
         try:
-            product_price = float(self.product_price_box.text())
+            product_price = self._eval_expr(self.product_price_box.text())
         except ValueError as e:
             self.product_price_box.clear()
             print(e)
